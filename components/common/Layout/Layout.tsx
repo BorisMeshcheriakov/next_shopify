@@ -1,7 +1,13 @@
 import React from 'react';
 
+import s from './Layout.module.css';
+
 const Layout: React.FC = ({ children }) => {
-	return <main className="root">{children}</main>;
+	return (
+		<div className={s.root}>
+			<main className="fit">{children}</main>
+		</div>
+	);
 };
 
 export default Layout;

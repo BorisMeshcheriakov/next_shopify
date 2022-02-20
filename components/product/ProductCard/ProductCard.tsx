@@ -3,20 +3,28 @@ import { Product } from '@common/types/product';
 import Link from 'next/link';
 import Image from 'next/image';
 
+import s from './ProductCard.module.css';
+
 type Props = {
 	product: Product;
 };
 const placeholderImage = '/product-image-placeholder.svg';
-const ProductCart: React.FC<Props> = ({ product }) => {
+const ProductCard: React.FC<Props> = ({ product }) => {
 	return (
 		<Link href={`products/${product.slug}`}>
-			<a>
-				<h3>
-					<span>{product.name}</span>
-				</h3>
-				<span>14 $</span>
+			<a className={s.root}>
+				<div className={s.productBg}></div>
+				<div className={s.productTag}>
+					<h3 className={s.productTitle}>
+						<span>{product.name}</span>
+					</h3>
+					<span className={s.productPrice}>
+						{product.price.value} {product.price.currencyCode}
+					</span>
+				</div>
 				{product.images && (
 					<Image
+						className={s.productImage}
 						alt={product.name ?? 'Product image'}
 						src={product.images[0].url ?? placeholderImage}
 						height={540}
@@ -30,4 +38,4 @@ const ProductCart: React.FC<Props> = ({ product }) => {
 	);
 };
 
-export default ProductCart;
+export default ProductCard;

@@ -3,7 +3,7 @@ import getAllProducts from '@framework/product/get-all-products';
 import { getConfig } from '@framework/api/config';
 import { Layout } from '@components/common';
 import ProductCard from '@components/product/ProductCard';
-import { Grid } from '@components/ui';
+import { Grid, Hero, Marquee } from '@components/ui';
 
 export async function getStaticProps() {
 	const config = getConfig();
@@ -20,9 +20,18 @@ export default function Home({ products }: InferGetStaticPropsType<typeof getSta
 		<>
 			<Grid>
 				{products.slice(0, 3).map((product) => (
-					<ProductCard key={product.id} product={product} />
+					<ProductCard variant="simple" key={product.id} product={product} />
 				))}
 			</Grid>
+			<Hero
+				headline="Biscuit cookie fruitcake"
+				description="cheesecake donut cheesecake jelly-o lemon drops cake. Jujubes caramels lollipop gingerbread dessert cheesecake jujubes carrot cake toffee."
+			/>
+			<Marquee>
+				{products.slice(0, 3).map((product) => (
+					<ProductCard variant="slim" key={product.id} product={product} />
+				))}
+			</Marquee>
 		</>
 	);
 }

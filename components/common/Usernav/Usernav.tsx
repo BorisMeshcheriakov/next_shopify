@@ -12,7 +12,7 @@ const Usernav: React.FC = () => {
 					<Cart />
 				</li>
 				<li className={s.item}>
-					<Link href="/">
+					<Link href="/wishlist">
 						<a>
 							<Heart />
 						</a>

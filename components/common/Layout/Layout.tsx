@@ -5,19 +5,22 @@ import { CartSidebar } from '@components/cart';
 
 import s from './Layout.module.css';
 import { useUI } from '@components/ui/context';
+import { ApiProvider } from '@framework';
 
 const Layout: React.FC = ({ children }) => {
 	const { isSidebarOpen, closeSidebar } = useUI();
 
 	return (
-		<div className={s.root}>
-			<Navbar />
-			<Sidebar isOpen={isSidebarOpen} onClose={closeSidebar}>
-				<CartSidebar />
-			</Sidebar>
-			<main className="fit">{children}</main>
-			<Footer />
-		</div>
+		<ApiProvider>
+			<div className={s.root}>
+				<Navbar />
+				<Sidebar isOpen={isSidebarOpen} onClose={closeSidebar}>
+					<CartSidebar />
+				</Sidebar>
+				<main className="fit">{children}</main>
+				<Footer />
+			</div>
+		</ApiProvider>
 	);
 };
 

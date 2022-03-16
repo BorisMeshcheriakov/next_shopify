@@ -10,5 +10,3 @@ module.exports = withFrameworkConfig({
 		defaultLocale: 'en-US',
 	},
 });
-
-console.log('config', JSON.stringify(module.exports, null, 2));

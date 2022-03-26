@@ -21,7 +21,7 @@ export const normalizeCart = (checkout: Checkout): Cart => {
 		taxesIncluded: checkout.taxesIncluded,
 		lineItemsSubtotalPrice: +checkout.subtotalPriceV2.amount,
 		totalPrice: checkout.totalPriceV2.amount,
-		lineItems: checkout.lineItems.edges.map((lineItemEdge) => lineItemEdge.node),
+		lineItems: checkout.lineItems.edges.map(normalizeLineItem),
 		discounts: [],
 	};
 };

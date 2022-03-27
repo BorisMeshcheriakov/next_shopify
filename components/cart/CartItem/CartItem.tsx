@@ -1,13 +1,42 @@
+import { ChangeEvent, useState } from 'react';
 import cn from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
 import s from './CartItem.module.css';
 import { Trash, Plus, Minus } from '@components/icons';
 import { LineItem } from '@common/types/cart';
+import { Swatch } from '@components/product';
+import useRemoveItem from '@common/cart/use-remove-item';
+import useUpdateItem from '@framework/cart/use-update-item';
 
 const CartItem = ({ item, currencyCode }: { item: LineItem; currencyCode: string }) => {
-	const price = item.variant.price! * item.quantity || 0;
+	const removeItem = useRemoveItem();
+	const updateItem = useUpdateItem();
 
+	const [quantity, setQuantity] = useState(item.quantity);
+	const price = item.variant.price! * item.quantity || 0;
+	const { options } = item;
+
+	const handleQuantityChange = (val: number) => {
+		if (Number.isInteger(val) && val >= 0) {
+			setQuantity(val);
+			updateItem({
+				id: item.id,
+				variantId: item.variantId,
+				quantity: val,
+			});
+		}
+	};
+
+	const handleQuantity = async (e: ChangeEvent<HTMLInputElement>) => {
+		const val = Number(e.target.value);
+		handleQuantityChange(val);
+	};
+
+	const incrementQuantity = async (n = 1) => {
+		const val = Number(quantity) + n;
+		handleQuantityChange(val);
+	};
 	return (
 		<li
 			className={cn('flex flex-row space-x-8 py-8', {
@@ -15,16 +44,14 @@ const CartItem = ({ item, currencyCode }: { item: LineItem; currencyCode: string
 			})}
 		>
 			<div className="w-16 h-16 bg-violet relative overflow-hidden cursor-pointer">
-				<Link href={`/product/${item.path}`}>
-					<Image
-						onClick={() => {}}
-						className={s.productImage}
-						width={150}
-						height={150}
-						src={item.variant.image!.url}
-						unoptimized
-					/>
-				</Link>
+				<Image
+					onClick={() => {}}
+					className={s.productImage}
+					width={150}
+					height={150}
+					src={item.variant.image!.url}
+					unoptimized
+				/>
 			</div>
 			<div className="flex-1 flex flex-col text-base">
 				<Link href={`/`}>
@@ -32,10 +59,26 @@ const CartItem = ({ item, currencyCode }: { item: LineItem; currencyCode: string
 						{item.name}
 					</span>
 				</Link>
-				Options Here
+				<div className="flex p-2">
+					{options &&
+						options.length > 0 &&
+						options.map((option) => {
+							const value = option.values[0];
+							return (
+								<Swatch
+									key={`${item.id}-${option.displayName}`}
+									size="sm"
+									onClick={() => {}}
+									label={value.label}
+									color={value.hexColor}
+									variant={option.displayName}
+								></Swatch>
+							);
+						})}
+				</div>
 				<div className="flex items-center mt-3">
 					<button type="button">
-						<Minus onClick={() => {}} />
+						<Minus onClick={() => incrementQuantity(-1)} />
 					</button>
 					<label>
 						<input
@@ -43,13 +86,13 @@ const CartItem = ({ item, currencyCode }: { item: LineItem; currencyCode: string
 							max={99}
 							min={0}
 							className={s.quantity}
-							value={item.quantity}
-							onChange={() => {}}
+							value={quantity}
+							onChange={handleQuantity}
 							onBlur={() => {}}
 						/>
 					</label>
 					<button type="button">
-						<Plus onClick={() => {}} />
+						<Plus onClick={() => incrementQuantity(+1)} />
 					</button>
 				</div>
 			</div>
@@ -57,7 +100,12 @@ const CartItem = ({ item, currencyCode }: { item: LineItem; currencyCode: string
 				<span>
 					{price} {currencyCode}
 				</span>
-				<button onClick={() => {}} className="flex justify-end outline-none">
+				<button
+					onClick={() => {
+						removeItem({ id: item.id });
+					}}
+					className="flex justify-end outline-none"
+				>
 					<Trash />
 				</button>
 			</div>

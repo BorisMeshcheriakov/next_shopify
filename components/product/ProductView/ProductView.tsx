@@ -17,6 +17,7 @@ interface Props {
 
 const ProductView: FC<Props> = ({ product }) => {
 	const [choices, setChoices] = React.useState<Choices>({});
+	const [isLoading, setIsLoading] = React.useState(false);
 	const { openSidebar } = useUI();
 	const addItem = useAddItem();
 	const variant = getVariant(product, choices);
@@ -25,14 +26,18 @@ const ProductView: FC<Props> = ({ product }) => {
 		try {
 			const item = {
 				productId: String(product.id),
-				variantId: String(variant?.id),
+				variantId: String(variant ? variant.id : product.variants[0].id),
 				variantOptions: variant?.options,
 				quantity: 1,
 			};
 
+			setIsLoading(true);
 			const output = await addItem(item);
+			setIsLoading(false);
 			openSidebar();
-		} catch (error) {}
+		} catch (error) {
+			setIsLoading(false);
+		}
 	};
 
 	return (
@@ -94,7 +99,7 @@ const ProductView: FC<Props> = ({ product }) => {
 						<div className="pb-14 break-words w-full max-w-xl text-lg">{product.description}</div>
 					</section>
 					<div>
-						<Button className={s.button} onClick={addToCart}>
+						<Button className={s.button} onClick={addToCart} isLoading={isLoading}>
 							Add to Cart
 						</Button>
 					</div>

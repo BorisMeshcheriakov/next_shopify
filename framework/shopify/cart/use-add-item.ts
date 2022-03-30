@@ -5,7 +5,6 @@ import { MutationHook } from '@common/types/hooks';
 import { CheckoutLineItemsAddPayload } from '@framework/schema';
 import { checkoutToCart, getCheckoutId } from '@framework/utils';
 import { checkoutLineItemsAddMutation } from '@framework/utils/mutations';
-import { mutate } from 'swr';
 import useCart from './use-cart';
 
 export default useAddItem as UseAddItem<typeof handler>;
